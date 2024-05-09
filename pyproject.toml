@@ -4,6 +4,8 @@ version = "0.1.0"
 description = ""
 authors = ["Samuel Lowe <samlowe106@gmail.com>"]
 readme = "README.md"
+license = "LICENSE"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.10"
