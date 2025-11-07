@@ -29,7 +29,7 @@ repos:
     rev: 7.0.0
     hooks:
       - id: isort
-        args: ["--profile", "black"]
+        args: [--profile=black]
   #        args: [
   #          --line-length=110,
   #          --multi-line=3,
@@ -64,7 +64,7 @@ repos:
             --per-file-ignores=__init__.py:F401
           ]
       - id: nbqa-isort
-        args: ["--profile", "black"]
+        args: [--profile=black]
       - id: nbqa-mypy
         args:
           [
