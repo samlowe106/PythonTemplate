@@ -1,52 +1,17 @@
 # Python Repository Template
 
-This is a template repository for creating Python projects with [poetry](https://python-poetry.org/) and [pre-commit](https://pre-commit.com/) hooks.
+This is a template repository to help me make Python projects with my preferred technologies configured out of the box:
+* [pre-commit](https://pre-commit.com/) hooks
+* [pytest](https://docs.pytest.org/en/stable/)
+* [GitHub Workflows](https://docs.github.com/en/actions/concepts/workflows-and-actions/workflows)
 
-## Installation
-
-If you're cloning this repo and want to set it up to work on your machine, you only need to
-
-1. Install poetry
-2. Install pre-commit
-
-If you're on a linux machine, this can be done by running setup.sh:
-
-```shell
-curl -sSL https://install.python-poetry.org | python3 -
-poetry install
-python3 -m pip install --upgrade pip
-pip install --upgrade pre-commit
-pre-commit install
-```
+The only dependency is [uv](https://docs.astral.sh/uv/), which you can install by following [these instructions](https://docs.astral.sh/uv/getting-started/installation/). Then, you can run [setup.sh](https://github.com/samlowe106/PythonTemplate/blob/main/setup.sh).
 
 From there, you only need to
 
-- edit the repo details in pyproject.toml,
-- `poetry add` any additional dependencies,
-- customize pre-commit hooks in `.pre-commit-config.yaml`,
-- edit the .gitignore file,
-- edit this README, and
-- set your license
-
-### Creating this repo
-
-The full steps used to create the repo are similar:
-
-```shell
-curl -sSL https://install.python-poetry.org | python3 -
-poetry init
-poetry config virtualenvs.in-project true
-poetry install
-
-# This installs and updates pre-commit globally
-python3 -m pip install --upgrade pip
-pip install --upgrade pre-commit
-
-# To install pre-commit locally, comment out the above and instead run
-# poetry add pre-commit
-# poetry shell
-
-pre-commit install
-```
-
-These commands are in `initialize-project.sh`
+- [ ] edit the repo details in pyproject.toml,
+- [ ] `uv add` any additional dependencies,
+- [ ] customize pre-commit hooks in `.pre-commit-config.yaml`,
+- [ ] edit the .gitignore file,
+- [ ] edit this README, and
+- [ ] set your license
