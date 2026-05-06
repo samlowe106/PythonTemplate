@@ -3,7 +3,7 @@
 # winget install --id=astral-sh.uv  -e
 
 uv init
-uv add pre-commit pytest
+uv add pre-commit pytest python-dotenv
 
 pre-commit autoupdate
 pre-commit install
