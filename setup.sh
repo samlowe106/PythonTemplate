@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # install uv using one of the following:
 # curl -LsSf https://astral.sh/uv/install.sh | sh
 # winget install --id=astral-sh.uv  -e
