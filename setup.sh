@@ -5,6 +5,8 @@
 uv init
 uv add pre-commit pytest python-dotenv
 
+touch .env
+
 pre-commit autoupdate
 pre-commit install
 
