@@ -7,6 +7,9 @@
 uv init
 uv add pre-commit pytest python-dotenv
 
+# add this if you want to use PySide6 for a UI app
+#uv add PySide6
+
 touch .env
 
 pre-commit autoupdate
