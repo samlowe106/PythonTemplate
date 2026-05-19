@@ -21,7 +21,7 @@ else
 fi
 
 uv init
-uv add pre-commit pytest python-dotenv
+uv add pre-commit pytest python-dotenv coverage pytest-cov
 
 # uv add httpx vcrpy pytest-asyncio
 # uv add django
