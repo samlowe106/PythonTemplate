@@ -23,8 +23,10 @@ fi
 uv init
 uv add pre-commit pytest python-dotenv
 
-# add this if you want to use PySide6 for a UI app
-#uv add PySide6
+# uv add httpx vcrpy pytest-asyncio
+# uv add django
+# uv add fastapi
+# uv add PySide6
 
 touch .env
 
