@@ -37,6 +37,12 @@ repos:
       - id: black
         args: [--safe]
 
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.14.0
+    hooks:
+      # lints the Dockerfile; runs via Docker, so Docker must be available
+      - id: hadolint-docker
+
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: "v2.1.0"
     hooks:

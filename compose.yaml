@@ -1,0 +1,14 @@
+services:
+  app:
+    build: .
+    image: pythontemplate
+    # Load environment variables from .env if it exists (optional).
+    env_file:
+      - path: .env
+        required: false
+    # For a web service, publish a port (and update the Dockerfile CMD):
+    # ports:
+    #   - "8000:8000"
+    # For live-reload during development, mount the source over the image:
+    # volumes:
+    #   - ./src:/app/src

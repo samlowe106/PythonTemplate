@@ -7,9 +7,10 @@ A batteries-included starting point for Python projects, wired up with my prefer
 ## What's inside
 
 - **[uv](https://docs.astral.sh/uv/)** — dependency management, virtual environments, and Python version pinning
-- **[pre-commit](https://pre-commit.com/)** hooks — [Ruff](https://docs.astral.sh/ruff/) (lint + autofix), [Black](https://black.readthedocs.io/) (format), [mypy](https://mypy-lang.org/) (type-check), plus a set of hygiene checks
+- **[pre-commit](https://pre-commit.com/)** hooks — [Ruff](https://docs.astral.sh/ruff/) (lint + autofix), [Black](https://black.readthedocs.io/) (format), [mypy](https://mypy-lang.org/) (type-check), [hadolint](https://github.com/hadolint/hadolint) (Dockerfile lint), plus a set of hygiene checks
 - **[pytest](https://docs.pytest.org/)** with coverage via [pytest-cov](https://pytest-cov.readthedocs.io/)
-- **[GitHub Actions](https://docs.github.com/en/actions)** — lints and tests on every push and pull request to `main`
+- **[Docker](https://docs.docker.com/)** — multi-stage Dockerfile + Compose for reproducible, containerized builds
+- **[GitHub Actions](https://docs.github.com/en/actions)** — lints, tests, and builds the image on every push and pull request to `main`
 
 ## Project layout
 
@@ -21,8 +22,10 @@ A batteries-included starting point for Python projects, wired up with my prefer
 │   └── ui.py                     # example PySide6 window (optional — see below)
 ├── tests/                        # pytest tests (test_*.py)
 │   └── test_main.py
-├── .pre-commit-config.yaml       # ruff, black, mypy, and hygiene hooks
+├── .pre-commit-config.yaml       # ruff, black, mypy, hadolint, hygiene hooks
 ├── .python-version               # pinned Python version (drives CI + uv)
+├── Dockerfile                    # multi-stage, uv-based production image
+├── compose.yaml                  # Docker Compose for local runs
 ├── pyproject.toml                # project metadata + dependencies
 └── uv.lock                       # pinned, reproducible lockfile
 ```
@@ -55,6 +58,21 @@ uv add --dev <package>             # add a dev/tooling dependency
 
 > **Using the example GUI?** [src/ui.py](src/ui.py) is a small [PySide6](https://doc.qt.io/qtforpython/) window included for reference. PySide6 is not installed by default — run `uv add pyside6` if you want to use it.
 
+## Docker
+
+A multi-stage [Dockerfile](Dockerfile) and [compose.yaml](compose.yaml) are included. The
+image installs dependencies from `uv.lock`, runs as a non-root user, and defaults to
+`python -m src.main`.
+
+```bash
+docker build -t myapp .     # build the image
+docker run --rm myapp       # run it
+docker compose up --build   # ...or via Compose
+```
+
+For a web service, set an `EXPOSE`/port and update the `CMD` in the Dockerfile (and the
+ports in compose.yaml). CI builds the image on every push/PR to catch a broken Dockerfile.
+
 ## Make it your own
 
 - [ ] Set `name`, `description`, and an author in [pyproject.toml](pyproject.toml)
@@ -62,5 +80,6 @@ uv add --dev <package>             # add a dev/tooling dependency
 - [ ] Adjust the pinned version in [.python-version](.python-version) if needed
 - [ ] Customize the hooks in [.pre-commit-config.yaml](.pre-commit-config.yaml)
 - [ ] Edit [.gitignore](.gitignore)
+- [ ] Set the `CMD`/ports in [Dockerfile](Dockerfile) and [compose.yaml](compose.yaml) for your app
 - [ ] Add your license text to the empty [LICENSE](LICENSE) file
 - [ ] Update the CI badge URL and rewrite this README

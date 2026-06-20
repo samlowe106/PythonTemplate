@@ -1,0 +1,32 @@
+# Virtual environments (the image builds its own)
+.venv/
+venv/
+
+# Version control & CI
+.git/
+.github/
+
+# Secrets and local config — never bake these into an image
+.env
+*.env
+
+# Python caches and build artifacts
+__pycache__/
+*.py[cod]
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+
+# Tooling / docs that aren't needed at runtime
+.pre-commit-config.yaml
+.gitignore
+README.md
+LICENSE
+Dockerfile
+.dockerignore
+compose.yaml
+setup.sh
+tests/
