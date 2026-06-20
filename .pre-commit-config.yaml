@@ -18,6 +18,8 @@ repos:
       - id: debug-statements
       - id: end-of-file-fixer
       - id: name-tests-test
+        # enforce the conventional test_*.py prefix (default requires *_test.py)
+        args: [--pytest-test-first]
       - id: pretty-format-json
       - id: sort-simple-yaml
       - id: trailing-whitespace
