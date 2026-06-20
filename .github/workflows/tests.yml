@@ -19,6 +19,22 @@ jobs:
         run: |
           ver=$(cat .python-version | tr -d ' \n')
           echo "matrix=[\"$ver\"]" >> $GITHUB_OUTPUT
+  lint:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    needs: prepare
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ${{ fromJson(needs.prepare.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      # runs every hook in .pre-commit-config.yaml (ruff, black, mypy, ...)
+      - uses: pre-commit/action@v3.0.1
 
   test:
     permissions:
