@@ -19,6 +19,6 @@ max_line_length = 88
 indent_size = 2
 
 # Markdown uses trailing whitespace for hard line breaks — don't strip it
-# (mirrors the trailing-whitespace pre-commit hook's --markdown-linebreaks).
+# (mirrors the trailing-whitespace pre-commit hook's --markdown-linebreak-ext).
 [*.md]
 trim_trailing_whitespace = false
