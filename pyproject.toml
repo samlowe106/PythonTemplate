@@ -16,6 +16,58 @@ dev = [
     "pytest-cov>=5.0.0",
 ]
 
+# This project is an application, not a distributable library: `uv` installs the
+# dependencies but never builds or installs the project itself. That is what lets
+# the code live in a plain `src/` package and run via `python -m src.main` without
+# packaging it. To ship this as a real package instead, drop this table and add a
+# [build-system] plus a proper package name and layout.
+[tool.uv]
+package = false
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+# Default options so a bare `pytest` (or `uv run pytest`) matches CI exactly.
+addopts = "--verbose --cov=src --cov-report=term-missing"
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+# Uncomment to fail the build below a coverage threshold:
+# fail_under = 80
+
+# Ruff (linter). Rule selection lives here, not in the pre-commit args, so your
+# editor's Ruff integration enforces exactly the same rules. The pre-commit hook
+# only adds --fix, so commits auto-apply fixable violations.
+[tool.ruff]
+target-version = "py314"
+
+[tool.ruff.lint]
+# Added on top of Ruff's defaults (E, F). Full list: https://docs.astral.sh/ruff/rules/
+extend-select = [
+    "I",    # isort: import ordering (replaces the standalone isort tool)
+    "UP",   # pyupgrade: modern syntax for the target Python version
+    "B",    # flake8-bugbear: likely bugs and footguns
+    "B014", # (explicit) redundant exception types in `except`
+    "F841", # (explicit) local variable assigned but never used
+    "SIM",  # flake8-simplify: simpler equivalent code
+    "RET",  # flake8-return: return-statement hygiene
+    "LOG",  # flake8-logging: correct logging usage
+    "G",    # flake8-logging-format: no f-strings / % in log calls
+    "PERF", # perflint: performance anti-patterns
+    "T20",  # flake8-print: flags stray print() (use `# noqa: T201` to allow one)
+]
+
+# mypy (type checker). Config lives here so the editor, CLI, and pre-commit agree.
+# --install-types / --non-interactive stay as pre-commit args: they are CLI-only
+# and let the isolated hook environment fetch missing type stubs.
+[tool.mypy]
+python_version = "3.14"
+strict_optional = false
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+pretty = true

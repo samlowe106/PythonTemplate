@@ -18,8 +18,8 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
         with:
           python-version-file: .python-version
       # runs every hook in .pre-commit-config.yaml (ruff, black, mypy, ...)
@@ -28,28 +28,31 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       # Installs uv, provisions Python from .python-version, and caches ~/.cache/uv.
-      - uses: astral-sh/setup-uv@v5
+      # setup-uv no longer publishes a moving major tag, so pin a full version.
+      - uses: astral-sh/setup-uv@v8.2.0
         with:
           enable-cache: true
 
       - name: Sync environment
         run: uv sync --frozen
 
+      # Options (verbose, coverage) come from [tool.pytest.ini_options] in
+      # pyproject.toml, so this matches a local `uv run pytest` exactly.
       - name: Run tests
-        run: uv run pytest --verbose --cov=src tests/
+        run: uv run pytest
 
   # Verify the production image builds. Layer caching reuses the expensive
   # `uv sync` layer, which only rebuilds when pyproject.toml / uv.lock change.
   docker:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: docker/setup-buildx-action@v3
+      - uses: actions/checkout@v7
+      - uses: docker/setup-buildx-action@v4
       - name: Build image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           push: false

@@ -21,14 +21,22 @@ repos:
         # enforce the conventional test_*.py prefix (default requires *_test.py)
         args: [--pytest-test-first]
       - id: pretty-format-json
+        # --autofix reformats instead of only failing; keep the author's key order
+        args: [--autofix, --no-sort-keys]
+      # Only acts on files you list under `files:` (it sorts flat "simple" YAML
+      # alphabetically), so it is a no-op until you point it at such a file.
       - id: sort-simple-yaml
       - id: trailing-whitespace
+        # preserve Markdown hard line breaks (a line ending in two spaces)
+        args: [--markdown-linebreaks]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.18
+    rev: v0.16.0
     hooks:
       - id: ruff
         name: ruff (lint + autofix)
+        # Rules are configured in [tool.ruff.lint] in pyproject.toml (shared with
+        # your editor). --fix makes commits auto-apply fixable violations.
         args: [--fix]
 
   - repo: https://github.com/psf/black
@@ -43,14 +51,19 @@ repos:
       # lints the Dockerfile; runs via Docker, so Docker must be available
       - id: hadolint-docker
 
+  # Type checking: pick ONE of mypy (below) or ty (further down) and delete the
+  # other; both is redundant. mypy is the mature default, ty is
+  # Astral's much faster but pre-1.0 type checker
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: "v2.1.0"
+    rev: "v2.3.0"
     hooks:
       - id: mypy
-        args:
-          [
-            --no-strict-optional,
-            --ignore-missing-imports,
-            --install-types,
-            --non-interactive,
-          ]
+        # Settings live in [tool.mypy] in pyproject.toml (shared with your editor).
+        # These two are CLI-only: they let the isolated hook env install stubs.
+        args: [--install-types, --non-interactive]
+
+  - repo: https://github.com/astral-sh/ty-pre-commit
+    rev: v0.0.63
+    hooks:
+      # ty reads its config from [tool.ty] in pyproject.toml, not CLI flags.
+      - id: ty
