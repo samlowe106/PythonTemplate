@@ -7,7 +7,7 @@ A batteries-included starting point for Python projects, wired up with my prefer
 ## What's inside
 
 - **[uv](https://docs.astral.sh/uv/)** — dependency management, virtual environments, and Python version pinning
-- **[pre-commit](https://pre-commit.com/)** hooks — [Ruff](https://docs.astral.sh/ruff/) (lint + autofix), [Black](https://black.readthedocs.io/) (format), [mypy](https://mypy-lang.org/) (type-check), [hadolint](https://github.com/hadolint/hadolint) (Dockerfile lint), plus a set of hygiene checks
+- **[pre-commit](https://pre-commit.com/)** hooks — [Ruff](https://docs.astral.sh/ruff/) (lint + autofix), [Black](https://black.readthedocs.io/) (format), [mypy](https://mypy-lang.org/) or [ty](https://github.com/astral-sh/ty) (type-check), [hadolint](https://github.com/hadolint/hadolint) (Dockerfile lint), plus a set of hygiene checks (see [Code quality](#code-quality-pre-commit))
 - **[pytest](https://docs.pytest.org/)** with coverage via [pytest-cov](https://pytest-cov.readthedocs.io/)
 - **[Docker](https://docs.docker.com/)** — multi-stage Dockerfile + Compose for reproducible, containerized builds
 - **[GitHub Actions](https://docs.github.com/en/actions)** — lints, tests, and builds the image on every push and pull request to `main`
@@ -18,8 +18,7 @@ A batteries-included starting point for Python projects, wired up with my prefer
 .
 ├── .github/workflows/tests.yml   # CI: lint (pre-commit) + test (pytest + coverage)
 ├── src/                          # your application code
-│   ├── main.py                   # entry point
-│   └── ui.py                     # example PySide6 window (optional — see below)
+│   └── main.py                   # entry point
 ├── tests/                        # pytest tests (test_*.py)
 │   └── test_main.py
 ├── .pre-commit-config.yaml       # ruff, black, mypy, hadolint, hygiene hooks
@@ -56,7 +55,27 @@ uv add <package>                   # add a runtime dependency
 uv add --dev <package>             # add a dev/tooling dependency
 ```
 
-> **Using the example GUI?** [src/ui.py](src/ui.py) is a small [PySide6](https://doc.qt.io/qtforpython/) window included for reference. PySide6 is not installed by default — run `uv add pyside6` if you want to use it.
+## Code quality (pre-commit)
+
+Linting, formatting, and type-checking run automatically on every commit via [pre-commit](https://pre-commit.com/). Install the git hook once with `pre-commit install`; run every hook on demand with:
+
+```bash
+uv run pre-commit run --all-files
+```
+
+The hooks, defined in [.pre-commit-config.yaml](.pre-commit-config.yaml):
+
+- **[Ruff](https://docs.astral.sh/ruff/)** — linter, run with `--fix` so commits auto-apply fixable violations. The enabled rule set lives in `[tool.ruff.lint]` in [pyproject.toml](pyproject.toml), not in the hook, so your editor's Ruff integration enforces exactly the same rules. On top of the defaults it turns on import sorting (`I`, replacing standalone isort), pyupgrade (`UP`), bugbear (`B`), simplify (`SIM`), return hygiene (`RET`), logging (`LOG`/`G`), perflint (`PERF`), and print detection (`T20`).
+- **[Black](https://black.readthedocs.io/)** — opinionated code formatter.
+- **Type checker** — [mypy](https://mypy-lang.org/) (the mature default) and [ty](https://github.com/astral-sh/ty) (Astral's much faster, pre-1.0 checker) are both enabled. Pick one and delete the other hook; running both is redundant. mypy's settings live in `[tool.mypy]` in [pyproject.toml](pyproject.toml).
+- **[hadolint](https://github.com/hadolint/hadolint)** — Dockerfile linter. It runs via Docker, so Docker must be available (or skip it locally with `SKIP=hadolint-docker git commit ...`).
+- **Hygiene checks** — trailing whitespace, end-of-file newline, merge-conflict markers, valid JSON/TOML/YAML/XML, `test_*.py` naming, and more.
+
+Because Ruff and mypy read their config from [pyproject.toml](pyproject.toml), the CLI, your editor, and pre-commit all stay in agreement.
+
+> **Heads-up on `T20` (print detection):** Ruff flags leftover `print()` calls, which is great for catching debug statements but will complain about intentional prints (e.g. in a CLI). To allow a specific line, append `# noqa: T201`; to allow them everywhere, remove `"T20"` from `extend-select` in [pyproject.toml](pyproject.toml).
+
+The hook versions are refreshed automatically each month by the [pre-commit-autoupdate](.github/workflows/pre-commit-autoupdate.yml) workflow, which opens a PR when newer versions are available.
 
 ## Docker
 
@@ -78,7 +97,8 @@ ports in compose.yaml). CI builds the image on every push/PR to catch a broken D
 - [ ] Set `name`, `description`, and an author in [pyproject.toml](pyproject.toml)
 - [ ] Replace the example code in [src/](src/) and write real tests in [tests/](tests/) (named `test_*.py`)
 - [ ] Adjust the pinned version in [.python-version](.python-version) if needed
-- [ ] Customize the hooks in [.pre-commit-config.yaml](.pre-commit-config.yaml)
+- [ ] Pick a type checker (mypy or ty) and delete the other hook in [.pre-commit-config.yaml](.pre-commit-config.yaml)
+- [ ] Customize the hooks in [.pre-commit-config.yaml](.pre-commit-config.yaml) and the Ruff/mypy rules in [pyproject.toml](pyproject.toml)
 - [ ] Edit [.gitignore](.gitignore)
 - [ ] Set the `CMD`/ports in [Dockerfile](Dockerfile) and [compose.yaml](compose.yaml) for your app
 - [ ] Add your license text to the empty [LICENSE](LICENSE) file
