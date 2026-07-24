@@ -28,7 +28,7 @@ repos:
       - id: sort-simple-yaml
       - id: trailing-whitespace
         # preserve Markdown hard line breaks (a line ending in two spaces)
-        args: [--markdown-linebreaks]
+        args: [--markdown-linebreak-ext, "md,markdown"]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.16.0
