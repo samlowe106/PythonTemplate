@@ -28,7 +28,8 @@ package = false
 testpaths = ["tests"]
 pythonpath = ["."]
 # Default options so a bare `pytest` (or `uv run pytest`) matches CI exactly.
-addopts = "--verbose --cov=src --cov-report=term-missing"
+# --durations=0 reports how long every test took (slowest first).
+addopts = "--verbose --cov=src --cov-report=term-missing --durations=0"
 
 [tool.coverage.run]
 source = ["src"]
