@@ -11,7 +11,7 @@ dependencies = [
 # Development tooling — installed by `uv sync` (uv syncs the dev group by default).
 [dependency-groups]
 dev = [
-    "pre-commit>=4.6.0",
+    "pre-commit>=4.6.1",
     "pytest>=8.0.0",
     "pytest-cov>=5.0.0",
 ]
