@@ -49,7 +49,7 @@ touch .env
 
 ```bash
 uv run python -m src.main          # run the app
-uv run pytest                      # run tests with coverage
+uv run pytest                      # run tests with coverage + per-test timings
 uv run pre-commit run --all-files  # run every hook manually
 uv add <package>                   # add a runtime dependency
 uv add --dev <package>             # add a dev/tooling dependency
