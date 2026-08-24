@@ -32,8 +32,12 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 # ---- Runtime stage: a clean, minimal image with just the venv + source ----
 FROM python:3.14-slim-bookworm AS runtime
 
-# Run as an unprivileged user.
-RUN useradd --create-home --uid 1000 app
+# Create an unprivileged user to run as, and upgrade the base image's system
+# setuptools 70.3.0 (CVE-2025-47273 path traversal). The app runs from the venv
+# and never imports it, but upgrading clears the scanner finding. Remaining
+# base-image CVEs are Debian "won't fix" OS packages no build step can remove.
+RUN useradd --create-home --uid 1000 app \
+    && pip install --no-cache-dir --upgrade "setuptools>=78.1.1"
 
 WORKDIR /app
 
@@ -44,7 +48,8 @@ COPY --from=builder --chown=app:app /app/src /app/src
 # Put the venv first on PATH so "python" is the project interpreter.
 ENV PATH="/app/.venv/bin:$PATH"
 
-USER app
+# Use the numeric UID so the runtime doesn't depend on name resolution (DL3066).
+USER 1000
 
 # Default command — adjust for your app. For a web service, expose a port and
 # run your server instead, e.g.:
