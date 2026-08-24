@@ -63,7 +63,7 @@ repos:
         args: [--install-types, --non-interactive]
 
   - repo: https://github.com/astral-sh/ty-pre-commit
-    rev: v0.0.63
+    rev: v0.0.74
     hooks:
       # ty reads its config from [tool.ty] in pyproject.toml, not CLI flags.
       - id: ty
