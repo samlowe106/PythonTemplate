@@ -31,7 +31,7 @@ repos:
         args: [--markdown-linebreak-ext, "md,markdown"]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.16.4
+    rev: v0.17.3
     hooks:
       - id: ruff
         name: ruff (lint + autofix)
@@ -40,7 +40,7 @@ repos:
         args: [--fix]
 
   - repo: https://github.com/psf/black
-    rev: 26.5.1
+    rev: 26.10.1
     hooks:
       - id: black
         args: [--safe]
@@ -55,7 +55,7 @@ repos:
   # other; both is redundant. mypy is the mature default, ty is
   # Astral's much faster but pre-1.0 type checker
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: "v2.3.1"
+    rev: "v2.4.1"
     hooks:
       - id: mypy
         # Settings live in [tool.mypy] in pyproject.toml (shared with your editor).
@@ -63,7 +63,7 @@ repos:
         args: [--install-types, --non-interactive]
 
   - repo: https://github.com/astral-sh/ty-pre-commit
-    rev: v0.0.74
+    rev: v0.0.95
     hooks:
       # ty reads its config from [tool.ty] in pyproject.toml, not CLI flags.
       - id: ty
